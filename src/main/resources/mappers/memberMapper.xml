@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="member">
+	<insert id="insert" parameterType="com.you.joo.model.dto.MemberDTO">
+		insert into member2
+		 values(#{id}, #{pw}, #{email}, #{name}, #{introduce})
+	</insert>
+	
+	<select id="login_check" resultType="String">
+		SELECT NAME FROM member2
+		WHERE id = #{id} and pw = #{pw}
+	</select>
+	
+	<select id="myinfo" resultType="com.you.joo.model.dto.MemberDTO">
+		SELECT * FROM member2
+		WHERE name =#{name}
+	</select>
+	
+	<update id="update" parameterType="com.you.joo.model.dto.MemberDTO">
+		UPDATE member2 SET 
+		id = #{id}, pw = #{pw}, email = #{email}, name = #{name}, introduce = #{introduce}
+		WHERE name = #{name}
+	</update>
+	
+	<select id="allinfo" resultType="com.you.joo.model.dto.MemberDTO">
+		SELECT * FROM member2
+	</select>
+	
+	<delete id="delete">
+		DELETE FROM member2 
+		WHERE id = #{id}
+	</delete>
+	
+	<insert id="testInsert" parameterType="com.you.joo.model.dto.MemberDTO">
+		insert into member2
+		 values(#{id}, #{pw}, #{email}, #{name}, #{introduce})
+	</insert>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

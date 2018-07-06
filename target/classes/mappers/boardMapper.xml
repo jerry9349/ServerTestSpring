@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="board">
+
+	<!-- 게시판리스트 -->
+	<select id="selectList" resultType="com.you.joo.model.dto.BoardDTO">
+		SELECT
+		BOARD_NUM, BOARD_NAME, BOARD_SUBJECT, BOARD_READCOUNT, BOARD_DATE
+		FROM board 
+		ORDER BY BOARD_NUM DESC
+	</select>
+	
+	<!-- 게시글조회 -->
+	<select id="boardview" resultType="com.you.joo.model.dto.BoardDTO">
+		SELECT * FROM board
+		WHERE BOARD_NUM = #{BOARD_NUM}
+		<!-- SELECT
+		BOARD_NUM, BOARD_NAME, BOARD_SUBJECT, BOARD_CONTENT
+		FROM board
+		WHERE BOARD_NUM = #{BOARD_NUM} -->
+	</select>
+	
+	<!-- 게시글 조회수 증가 -->
+	<select id="boardCount">
+		UPDATE board
+		SET	BOARD_READCOUNT = BOARD_READCOUNT+1
+		WHERE BOARD_NUM = #{num}
+	</select>
+	
+	<!-- 게시글등록 -->
+	<insert id="boardinsert" parameterType="com.you.joo.model.dto.BoardDTO">
+		INSERT INTO board
+			(BOARD_NUM, BOARD_NAME, BOARD_PASS, BOARD_SUBJECT, BOARD_CONTENT, BOARD_DATE)
+		VALUES ((SELECT NVL(MAX(BOARD_NUM)+1,1) FROM board), #{BOARD_NAME}, #{BOARD_PASS},
+			#{BOARD_SUBJECT}, #{BOARD_CONTENT}, SYSDATE )
+	</insert>
+	
+	<!-- 게시글삭제 -->
+	<delete id="boardDelete" >
+		DELETE FROM board WHERE BOARD_NUM =#{num}		
+	</delete>
+	
+	<!-- 게시글수정페이지 -->
+	<select id="boardUpdatePage" resultType="com.you.joo.model.dto.BoardDTO">
+		SELECT
+		BOARD_NUM, BOARD_PASS, BOARD_SUBJECT, BOARD_CONTENT
+		FROM board
+		WHERE BOARD_NUM = #{BOARD_NUM}
+	</select>
+	
+	<!-- 게시글수정 -->
+	<update id="boardUpdate">
+		UPDATE board
+		SET
+		BOARD_PASS =#{BOARD_PASS}, BOARD_SUBJECT =#{BOARD_SUBJECT}, BOARD_CONTENT = #{BOARD_CONTENT}
+		WHERE BOARD_NUM = #{BOARD_NUM}
+	</update>
+	
+	<!-- 게시글답글페이지 -->
+	<select id="boardReplyPage" resultType="com.you.joo.model.dto.BoardDTO">
+		SELECT * FROM board
+		WHERE BOARD_NUM = #{num}
+	</select>
+	
+	<!-- 게시글번호최대값 -->
+	<select id="boardMaxNum" resultType="int">
+		SELECT MAX(BOARD_NUM) FROM board 
+	</select>
+	
+	<update id="boardReplyUpdate">
+		UPDATE board
+		SET BOARD_RE_SEQ = BOARD_RE_SEQ+1
+		WHERE BOARD_RE_REF = #{BOARD_RE_REF}
+		AND
+		BOARD_RE_SEQ > #{BOARD_RE_SEQ}
+	</update>
+
+	<insert id="boardReply">
+		INSERT INTO board 
+		(BOARD_NUM, BOARD_NAME, BOARD_PASS, BOARD_SUBJECT, BOARD_CONTENT,
+		BOARD_RE_REF, BOARD_RE_LEV, BOARD_RE_SEQ, BOARD_READCOUNT, BOARD_DATE)
+		VALUES(#{BOARD_NUM}, #{BOARD_NAME}, #{BOARD_PASS}, #{BOARD_SUBJECT},
+		#{BOARD_CONTENT}, #{BOARD_RE_REF}, #{BOARD_RE_LEV}, #{BOARD_RE_SEQ},
+		#{BOARD_READCOUNT}, SYSDATE)
+	</insert>	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
